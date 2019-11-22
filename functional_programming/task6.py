@@ -1,28 +1,39 @@
-def read_triags(n):
-	arr = []
-	for i in range(n):
-		arr.append(list(map(int, input().split())))
-	return arr
+from itertools import cycle, islice
+
+def readCoords(n):
+	if n == 0:
+		return []
+	coords = int(input()), int(input())
+	return readCoords(n-2) + [coords]
 
 
-def to_vector(arr):
-	vec = []
-	for elem in arr:
-		x1, x2, x3, x4, x5, x6 = elem
-		vec.append([x3-x1, x4-x2, x5-x3, x6-x4, x1-x5, x2-x6])
-	return vec
+def readTriags(n):
+	triags = []
+	for _ in range(n):
+		triag = readCoords(6)
+		triags.append(triag[::-1])
+	return triags
 
 
-def mult(arr, k):
-	ans = []
-	for elem in arr:
-		ans.append(list(map(lambda x: x*k, elem)))
-	return ans
+def giveVector(dots):
+	if len(dots) == 1:
+		return []
+	else:
+		return giveVector(dots[1:]) + list(y-x for x, y in zip(dots[0], dots[1]))
 
 
-def my_awesome_print(arr):
-	for elem in arr:
-		print(*elem)
+def main():
+	n = int(input())
+	triags = readTriags(n)
+	k = float(input())
+	print(triags)
+	# k = 2
+	# triags = [[(7, 0), (0, 4), (7, 4)]]
+	for triag in triags:
+		vector = giveVector(list(islice(cycle(triag), 4)))
+		vector = list(map(lambda x: x*k, vector))
+		print(*vector)
 
 
-my_awesome_print(mult(to_vector(read_triags(int(input()))), int(input())))
+if __name__ == "__main__":
+	main()
